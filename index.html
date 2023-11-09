@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <title>ISS Location</title>
+</head>
+<body>
+    <h5 style="padding: 0; margin: 0" id="output"></h5>
+    <div id="map"></div>
+
+    <py-config>
+        packages = ["folium"]
+    </py-config>
+    <py-script>
+        from pyodide.http import pyfetch
+        import asyncio
+        import folium
+
+        async def get_ISS_locdata():
+            response = await pyfetch("http://api.open-notify.org/iss-now.json", method="GET")
+            data = await response.json()
+            iss_pos = data.get("iss_position")
+            latitude = iss_pos["latitude"]
+            longitude = iss_pos["longitude"]
+
+            iss_coords = [float(latitude), float(longitude)]
+            iss_map = folium.Map(location = iss_coords, zoom_start = 5)
+            folium.Marker(iss_coords, popup = "ISS").add_to(iss_map)
+            iss_map
+
+            display(iss_map, target="map")
+
+            output = f"ISS current Location - Latitude: {latitude}, Longitude: {longitude}"
+            Element("output").write(output)
+        
+        asyncio.ensure_future(get_ISS_locdata())
+    </py-script>
+</body>
+</html>
