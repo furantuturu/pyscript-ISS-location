@@ -7,10 +7,28 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <title>ISS Location</title>
+    <style>
+        .map{
+            position: relative;
+        }
+        .container {
+            padding: .75rem .5rem;
+            background-color: #fff;
+            border: 2px solid #bbb;
+            border-radius: 2px 2px;
+            position: fixed;
+            top: 19px;
+            left: 70px;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
-    <h5 style="padding: 0; margin: 0" id="output"></h5>
-    <div id="map"></div>
+    <div id="map">
+        <div class="container">
+            <h5 style="padding: 0; margin: 0" id="output"></h5>
+        </div>
+    </div>
 
     <py-config>
         packages = ["folium"]
@@ -27,15 +45,27 @@
             latitude = iss_pos["latitude"]
             longitude = iss_pos["longitude"]
 
+            icon_image = "https://i.ibb.co/D7tgKwY/iss-icon.png"
+            icon = folium.CustomIcon(
+                icon_image,
+                icon_size=(190, 95)
+            )
+
             iss_coords = [float(latitude), float(longitude)]
-            iss_map = folium.Map(location = iss_coords, zoom_start = 5)
-            folium.Marker(iss_coords, popup = "ISS").add_to(iss_map)
+            iss_map = folium.Map(location = iss_coords, zoom_start = 3)
+            folium.Marker(iss_coords, icon=icon, popup="<h4>International Space Station</h4>").add_to(iss_map)
             iss_map
 
             display(iss_map, target="map")
 
-            output = f"ISS current Location - Latitude: {latitude}, Longitude: {longitude}"
+            output = f"ISS Current Location - Latitude: {latitude}, Longitude: {longitude}"
             Element("output").write(output)
+        
+        # TODO: finding fixes for the interval function
+        #async def setInterval(seconds, func):
+        #    while True:
+        #        asyncio.ensure_future(func())
+        #        await asyncio.sleep(seconds)
         
         asyncio.ensure_future(get_ISS_locdata())
     </py-script>
