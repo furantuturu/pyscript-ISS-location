@@ -61,12 +61,6 @@
             output = f"ISS Current Location - Latitude: {latitude}, Longitude: {longitude}"
             Element("output").write(output)
         
-        # TODO: finding fixes for the interval function
-        #async def setInterval(seconds, func):
-        #    while True:
-        #        asyncio.ensure_future(func())
-        #        await asyncio.sleep(seconds)
-        
         asyncio.ensure_future(get_ISS_locdata())
     </py-script>
 </body>
