@@ -1,5 +1,5 @@
 # Mini Project Series 9
-## Simple Calculator
+## ISS Locator Website
 
 Just host it on any local/live server you use or type
  ```
